@@ -12,6 +12,8 @@ interface AnalysisContextType {
   goToStep: (step: number) => void;
   reset: () => void;
   loadPreset: (preset: { definition: Partial<TaskDefinition>; diagnostic: Partial<DiagnosticData>; layers: Partial<DecisionLayers> }) => void;
+  aiSuggestionsGenerated: boolean;
+  generateAISuggestions: () => Promise<void>;
 }
 
 const AnalysisContext = createContext<AnalysisContextType | undefined>(undefined);
@@ -44,6 +46,10 @@ const initialState: AnalysisState = {
   },
   quadrant: null,
   needsEvidence: false
+};
+
+const initialAIState = {
+  aiSuggestionsGenerated: false
 };
 
 function analysisReducer(state: AnalysisState, action: AnalysisAction): AnalysisState {
@@ -128,6 +134,7 @@ function analysisReducer(state: AnalysisState, action: AnalysisAction): Analysis
 
 export function AnalysisProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(analysisReducer, initialState);
+  const [aiState, setAIState] = React.useState(initialAIState);
   
   const updateDefinition = (definition: Partial<TaskDefinition>) => {
     dispatch({ type: 'UPDATE_DEFINITION', payload: definition });
@@ -155,10 +162,18 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
   
   const reset = () => {
     dispatch({ type: 'RESET' });
+    setAIState(initialAIState);
   };
   
   const loadPreset = (preset: { definition: Partial<TaskDefinition>; diagnostic: Partial<DiagnosticData>; layers: Partial<DecisionLayers> }) => {
     dispatch({ type: 'LOAD_PRESET', payload: preset });
+    setAIState(initialAIState);
+  };
+
+  const generateAISuggestions = async () => {
+    // Simulate AI generation delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setAIState({ aiSuggestionsGenerated: true });
   };
   
   return (
@@ -172,7 +187,9 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
         previousStep,
         goToStep,
         reset,
-        loadPreset
+        loadPreset,
+        aiSuggestionsGenerated: aiState.aiSuggestionsGenerated,
+        generateAISuggestions
       }}
     >
       {children}

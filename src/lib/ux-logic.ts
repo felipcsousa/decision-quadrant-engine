@@ -68,6 +68,204 @@ export function getQuadrantInfo(quadrant: Quadrant) {
   return info[quadrant];
 }
 
+export function getDetailedPatterns(quadrant: Quadrant): any {
+  const patterns = {
+    Q1: {
+      objetivo: "Minimizar carga de decisão: um caminho dominante, sem forks. Favorecer memória muscular: posições/gestos estáveis e atalhos.",
+      sections: [
+        {
+          title: "Layout & Interface",
+          items: [
+            "Header enxuto com ação primária evidente",
+            "Cards/linhas com um CTA principal; opções secundárias em menus contextuais",
+            "Prefill/autofill agressivo (últimos valores, favoritos, templates)"
+          ]
+        },
+        {
+          title: "Interações",
+          items: [
+            "Interface otimista: mostrar resultado antes de confirmar servidor; manter desfazer por 5-10s",
+            "Gestos rápidos (ex.: swipe para ação) com confirmação apenas se Risco ≥ Médio"
+          ]
+        },
+        {
+          title: "Estados e Feedback",
+          items: [
+            "Loading: skeleton curto (≤300ms) antes de mostrar dado antigo com aviso de atualização",
+            "Sucesso: banner discreto com próxima ação ('Fazer de novo', 'Salvar como atalho')",
+            "Erro: mensagens locais, solução em 1 clique ('Tentar novamente')"
+          ]
+        },
+        {
+          title: "Microtexto",
+          items: [
+            "Verbo no imperativo curto ('Pagar', 'Enviar')",
+            "Evitar tecnicismos; focar no resultado ('Pix enviado')",
+            "Sem perguntas retóricas em confirmação de baixo risco"
+          ]
+        }
+      ],
+      checklistItems: [
+        "≤2 toques para ação comum",
+        "Prefill/autofill implementado",
+        "Desfazer disponível",
+        "Feedback ≤100ms",
+        "Sem modais desnecessários",
+        "Estados (vazio/carregando/erro/sucesso) definidos"
+      ],
+      antiPatterns: [
+        "Confirmações redundantes",
+        "'Vou te mostrar tudo' em vez de atalho direto",
+        "Deslocar CTA primário entre versões (quebra hábito)"
+      ]
+    },
+    Q2: {
+      objetivo: "Visão geral que orienta ação: o usuário decide o que atacar antes de como. Manter contexto ao filtrar/navegar.",
+      sections: [
+        {
+          title: "Layout & Interface",
+          items: [
+            "Overview→detail com painel resumo (KPIs, alertas) e lista/tabela principal",
+            "Filtros por categoria + busca; contadores por filtro; chips removíveis",
+            "Vistas salvas por usuário e padrões de seleção múltipla para ações em lote"
+          ]
+        },
+        {
+          title: "Interações",
+          items: [
+            "Ações primárias inline (evitar modal); detalhes em drawer lateral quando não quebrar fluxo",
+            "Atalhos de teclado (↑/↓, Enter, Cmd+K) e navegação persistente entre views"
+          ]
+        },
+        {
+          title: "Estados e Feedback",
+          items: [
+            "Loading parcial: skeleton na área afetada; manter dados anteriores",
+            "Erros de filtro/busca isolados e reversíveis; mostrar query atual sempre"
+          ]
+        },
+        {
+          title: "Microtexto",
+          items: [
+            "Rótulos curtos, consistentes (filtro/coluna)",
+            "Explicar regras de ordenação e escopo da busca ('pesquisa em [contexto]')"
+          ]
+        }
+      ],
+      checklistItems: [
+        "Overview→detail implementado",
+        "Filtros por categoria + busca",
+        "Vistas salvas disponíveis",
+        "Resposta ≈300ms",
+        "Ações em lote implementadas",
+        "Estados completos definidos"
+      ],
+      antiPatterns: [
+        "Modais encadeados",
+        "Filtros que 'resetam' ao navegar",
+        "Scroll infinito sem sumário",
+        "Tabelas densas sem affordances (colunas congeladas, resize, ordenar)"
+      ]
+    },
+    Q3: {
+      objetivo: "Reduzir ansiedade em tarefa rara: clareza, validação imediata, possibilidade de voltar.",
+      sections: [
+        {
+          title: "Layout & Interface",
+          items: [
+            "Uma decisão por tela; progresso de 2–3 passos; review final antes de enviar",
+            "Conteúdo com micro-exemplos; esconder 'avançado' por colapso"
+          ]
+        },
+        {
+          title: "Interações",
+          items: [
+            "Botões Voltar/Avançar previsíveis; salvar rascunho opcional se tempo >2–3 min",
+            "Desfazer após submissão quando possível"
+          ]
+        },
+        {
+          title: "Estados e Feedback",
+          items: [
+            "Validação inline (ao sair do campo); mensagens just-in-time",
+            "Sucesso com próximo passo sugerido ('Ir para…')"
+          ]
+        },
+        {
+          title: "Microtexto",
+          items: [
+            "Perguntas diretas ('Qual é…?'), exemplos curtos",
+            "Evitar condicionalidade complexa",
+            "Títulos em forma de tarefa ('Confirmar e enviar')"
+          ]
+        }
+      ],
+      checklistItems: [
+        "2–3 passos definidos",
+        "Uma decisão por tela",
+        "Review/desfazer implementado",
+        "Validação precoce",
+        "Estados completos"
+      ],
+      antiPatterns: [
+        "'Tudo numa tela' ou mais de 5 passos",
+        "Ajuda escondida em FAQ externo",
+        "Erros no final que poderiam ser detectados no início"
+      ]
+    },
+    Q4: {
+      objetivo: "Tomada de decisão informada com segurança; preservar contexto, evitar perda de progresso.",
+      sections: [
+        {
+          title: "Layout & Interface",
+          items: [
+            "Assistente/stepper com resumo fixo (lateral/topo), âncoras por seção, breadcrumbs",
+            "Campos críticos próximos ao resumo; tabelas/expansíveis para detalhes",
+            "Comparações e mini-simulações determinísticas quando existir fórmula/regra"
+          ]
+        },
+        {
+          title: "Interações",
+          items: [
+            "Autosave a cada campo/etapa; validação precoce e mensagens preditivas ('isso conflita com…')",
+            "Deep links para retomar no ponto; review final com diffs de alterações"
+          ]
+        },
+        {
+          title: "Estados e Feedback",
+          items: [
+            "Parcial persistente; sinalizar 'rascunho salvo'",
+            "Erros com explicação + como corrigir; log de validações críticas no resumo"
+          ]
+        },
+        {
+          title: "Microtexto",
+          items: [
+            "Explicitar trade-offs ('Maior segurança, maior tempo de aprovação')",
+            "Evitar jargão; quando inevitável, definição inline"
+          ]
+        }
+      ],
+      checklistItems: [
+        "Assistente/stepper implementado",
+        "Resumo fixo presente",
+        "Autosave funcionando",
+        "Validação precoce",
+        "Deep links/breadcrumbs",
+        "Estados completos"
+      ],
+      antiPatterns: [
+        "Solicitar tudo antes de dar visão do impacto",
+        "Validação tardia",
+        "'Salvar' dependente de uma única ação",
+        "Scroll infinito sem navegação estrutural"
+      ]
+    }
+  };
+  
+  return patterns[quadrant];
+}
+
 export function getBasePatterns(quadrant: Quadrant): Pattern[] {
   const patterns = {
     Q1: [
@@ -150,27 +348,94 @@ export function refineByLayers(basePatterns: Pattern[], layers: DecisionLayers):
   return { patterns: sortedPatterns, warnings };
 }
 
+export function getLayerDetails(): any {
+  return {
+    risk: {
+      baixo: {
+        ux: "Otimizar para ritmo. Confirmar apenas onde retorno é custoso.",
+        validation: "Leve, inline; desfazer amplo.",
+        copy: "Direta; evitar 'tem certeza?' desnecessário.",
+        measurement: "Taxa de desfazer; erros silenciosos toleráveis se reversíveis."
+      },
+      medio: {
+        ux: "Confirmar mudanças estruturais; destacar campos críticos.",
+        validation: "Checagens de consistência (cruzar 2–3 campos); alertas antes do submit.",
+        copy: "'Você está alterando X; isso afeta Y.'",
+        measurement: "Incidentes por 1.000 ações; tempo extra por confirmação."
+      },
+      alto: {
+        ux: "Confirmação explícita antes do commit; autenticação reforçada; review step com resumo e diffs.",
+        validation: "Regras preventivas; simulações determinísticas; double-check (digitar novamente um valor crítico).",
+        copy: "Consequências e reversibilidade ('Irreversível', 'Estorna até 30 min').",
+        measurement: "Zero falhas catastróficas; monitorar near-miss; tempo até confirmação aceitável."
+      }
+    },
+    uncertainty: {
+      baixa: {
+        ux: "Esconder ajuda por padrão; mostrar apenas on-demand.",
+        validation: "Mensagens concisas; sugestões suaves.",
+        copy: "Focada no resultado, sem 'porque'."
+      },
+      media: {
+        ux: "Exemplos concretos, micro-tutorial de 1 slide; pré-vias (before/after) de efeito.",
+        validation: "Confirmar regras implícitas ('Débito em fim de semana será no dia útil seguinte').",
+        copy: "Explique o porquê em uma linha."
+      },
+      alta: {
+        ux: "Ajuda contextual robusta; histórico (últimas escolhas) e mini-simulação determinística; 'ver impacto' sem sair da tela.",
+        validation: "Explicações vinculadas ao erro ('Falhou porque X>Y').",
+        copy: "Perguntas guiadas em linguagem natural ('Qual é sua meta…?' — sem LLM, mas roteiros fixos)."
+      }
+    },
+    urgency: {
+      baixa: {
+        ux: "Hierarquia padrão; espaço para leitura.",
+        validation: "Sem pressa; foco em exatidão.",
+        copy: "Calma, neutra."
+      },
+      media: {
+        ux: "Atalhos, autocompletar agressivo; priorizar itens frequentes no topo; CTA sticky.",
+        validation: "Feedback rápido; erros com correção em 1 clique.",
+        copy: "Objetiva ('Pronto em segundos')."
+      },
+      alta: {
+        ux: "Modo rápido: defaults seguros, confirmação pós-ação (quando reversível); encontrabilidade ≤2s via busca/atalhos; layouts com telemetria de foco (highlight do CTA).",
+        validation: "Máxima antecipação; fallback offline ou de latência (fila/retentativa).",
+        copy: "Enxuta, com estado do sistema ('Enviado', 'Em processamento')."
+      }
+    }
+  };
+}
+
 export function getGuardrails(quadrant: Quadrant, layers: DecisionLayers): Guardrail[] {
   const base = {
     Q1: [
       { metric: 'Toques para ação principal', target: '≤2 toques', description: 'Eficiência de acesso', range: '1-2 toques' },
       { metric: 'Tempo para conclusão', target: '≤5s', description: 'Meta de velocidade', range: '3-5s' },
-      { metric: 'Taxa de sucesso', target: '≥95%', description: 'Eficácia da interface', range: '95-100%' }
+      { metric: 'Taxa de sucesso', target: '≥95%', description: 'Eficácia da interface', range: '95-100%' },
+      { metric: 'TTS (time-to-success)', target: 'Minimizar', description: 'Tempo total até conclusão' },
+      { metric: 'Taxa de desfazer', target: '<5%', description: 'Qualidade das ações otimistas' }
     ],
     Q2: [
       { metric: 'Resposta de filtros', target: '300ms ± 100ms', description: 'Filtros reativos', range: '200-400ms' },
       { metric: 'Densidade de informação', target: '7±2 elementos por grupo', description: 'Legibilidade mantida', range: '5-9 elementos' },
-      { metric: 'Tempo de scan', target: '≤15s para overview', description: 'Compreensão rápida', range: '10-15s' }
+      { metric: 'Tempo de scan', target: '≤15s para overview', description: 'Compreensão rápida', range: '10-15s' },
+      { metric: 'Tempo para encontrar item', target: '<30s', description: 'Eficiência de localização' },
+      { metric: 'Uso de vistas salvas', target: '>40%', description: 'Reuso de configurações' }
     ],
     Q3: [
       { metric: 'Decisões por tela', target: '1 decisão', description: 'Simplicidade cognitiva', range: '1 decisão' },
       { metric: 'Clareza de sucesso', target: '100% dos usuários entendem', description: 'Feedback inequívoco', range: '95-100%' },
-      { metric: 'Taxa de abandono', target: '≤15%', description: 'Fluxo bem guiado', range: '5-15%' }
+      { metric: 'Taxa de abandono', target: '≤15%', description: 'Fluxo bem guiado', range: '5-15%' },
+      { metric: 'Conclusão sem ajuda', target: '>80%', description: 'Autoexplicativo' },
+      { metric: 'Tempo por passo', target: '<2min', description: 'Ritmo adequado' }
     ],
     Q4: [
       { metric: 'Prevenção de perda', target: 'Zero perda de dados', description: 'Progresso sempre salvo', range: '0% perda' },
       { metric: 'Validação real-time', target: '≤2s após input', description: 'Detecção precoce de erros', range: '1-2s' },
-      { metric: 'Tempo de preenchimento', target: '≤20min', description: 'Processo não exaustivo', range: '15-20min' }
+      { metric: 'Tempo de preenchimento', target: '≤20min', description: 'Processo não exaustivo', range: '15-20min' },
+      { metric: 'Conversão por etapa', target: '>85%', description: 'Retenção no fluxo' },
+      { metric: 'Taxa de revisita', target: '<30%', description: 'Conclusão em primeira tentativa' }
     ]
   };
   
@@ -220,6 +485,17 @@ export function generateChecklist(): ChecklistItem[] {
     { category: 'estados', item: 'Estado Parcial tratado', status: 'pending', description: 'Dados incompletos ou em progresso' },
     { category: 'estados', item: 'Estado Erro com recuperação', status: 'pending', description: 'Tratamento de falhas com ações' },
     { category: 'estados', item: 'Estado Sucesso claro', status: 'pending', description: 'Confirmação de conclusão' }
+  ];
+}
+
+export function getTransversalRecommendations(): string[] {
+  return [
+    "Padrões de confirmação devem ser raros em Q1 e inevitáveis em Risco Alto. Confirmação 'porque sim' é ruído e treina o usuário a ignorar.",
+    "Autosave é mandatório em Q4; opcional em Q3 se o preenchimento passar de 2–3 minutos.",
+    "Resumos fixos (Q4) são o 'seguro cognitivo': devem mostrar só o essencial, com links para alterar cada item.",
+    "Filtros por categoria em Q2 precisam de contagem (quantos itens) e chips removíveis — sem isso, viram caixa-preta.",
+    "Estados 'Parcial' e 'Vazio' não são decorativos: defina conteúdo útil (placeholders, dicas, próximos passos).",
+    "Motion/haptic (quando aplicável): Q1/Q2 → micro-transições discretas; Q3/Q4 → transições que reforçam sequência e relação (abrir/fechar seções, foco)."
   ];
 }
 
