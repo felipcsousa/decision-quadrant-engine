@@ -59,17 +59,33 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Custom tokens
+        // Custom surface tokens
         "surface-elevated": "hsl(var(--surface-elevated))",
         "surface-sunken": "hsl(var(--surface-sunken))",
+        "surface-hover": "hsl(var(--surface-hover))",
+        
+        // Text hierarchy
         "text-primary": "hsl(var(--text-primary))",
         "text-secondary": "hsl(var(--text-secondary))",
         "text-tertiary": "hsl(var(--text-tertiary))",
-        // Quadrant colors
+        
+        // Quadrant colors and backgrounds
         "q1": "hsl(var(--q1-color))",
         "q2": "hsl(var(--q2-color))",
         "q3": "hsl(var(--q3-color))",
         "q4": "hsl(var(--q4-color))",
+        "q1-bg": "hsl(var(--q1-bg))",
+        "q2-bg": "hsl(var(--q2-bg))",
+        "q3-bg": "hsl(var(--q3-bg))",
+        "q4-bg": "hsl(var(--q4-bg))",
+        
+        // Status colors
+        "success": "hsl(var(--success))",
+        "success-bg": "hsl(var(--success-bg))",
+        "warning": "hsl(var(--warning))",
+        "warning-bg": "hsl(var(--warning-bg))",
+        "info": "hsl(var(--info))",
+        "info-bg": "hsl(var(--info-bg))",
       },
       backgroundImage: {
         "gradient-primary": "var(--gradient-primary)",

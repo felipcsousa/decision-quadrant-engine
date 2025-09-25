@@ -42,12 +42,14 @@ export interface Pattern {
   name: string;
   description: string;
   category: 'base' | 'refinement';
+  priority?: 'essential' | 'high' | 'medium' | 'low';
 }
 
 export interface Guardrail {
   metric: string;
   target: string;
   description: string;
+  range?: string;
 }
 
 export interface ChecklistItem {

@@ -8,61 +8,74 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Linear/Notion inspired design system */
+    /* Notion-inspired neutral design system */
     --background: 0 0% 100%;
-    --foreground: 240 4% 16%;
+    --foreground: 0 0% 9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 4% 16%;
+    --card-foreground: 0 0% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 4% 16%;
+    --popover-foreground: 0 0% 9%;
 
-    /* Primary - Clean blue accent */
-    --primary: 211 100% 50%;
+    /* Primary - Subtle blue like Notion */
+    --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 211 100% 45%;
+    --primary-hover: 221 83% 48%;
 
-    /* Secondary - Subtle gray */
-    --secondary: 240 6% 96%;
-    --secondary-foreground: 240 6% 10%;
-    --secondary-hover: 240 5% 92%;
+    /* Secondary - Notion gray levels */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 20%;
+    --secondary-hover: 0 0% 92%;
 
-    /* Muted - Light grays */
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 4% 46%;
+    /* Muted - Neutral grays */
+    --muted: 0 0% 97%;
+    --muted-foreground: 0 0% 45%;
 
-    /* Accent - Purple tint */
-    --accent: 258 85% 96%;
-    --accent-foreground: 258 85% 15%;
+    /* Accent - Very subtle */
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 20%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders - Very subtle */
-    --border: 240 6% 92%;
-    --input: 240 6% 94%;
-    --ring: 211 100% 50%;
+    /* Borders - Notion-like subtle */
+    --border: 0 0% 90%;
+    --input: 0 0% 96%;
+    --ring: 221 83% 53%;
 
-    /* Enhanced radius for modern look */
-    --radius: 0.75rem;
+    /* Notion-like radius */
+    --radius: 0.5rem;
 
-    /* Custom tokens for app */
+    /* Surface levels */
     --surface-elevated: 0 0% 99%;
-    --surface-sunken: 240 5% 98%;
-    --text-primary: 240 4% 16%;
-    --text-secondary: 240 4% 46%;
-    --text-tertiary: 240 3% 66%;
+    --surface-sunken: 0 0% 98%;
+    --surface-hover: 0 0% 96%;
     
-    /* Quadrant colors */
-    --q1-color: 139 69% 49%; /* Green for Q1 */
-    --q2-color: 211 100% 50%; /* Blue for Q2 */
-    --q3-color: 47 96% 53%; /* Yellow for Q3 */
-    --q4-color: 14 91% 57%; /* Orange for Q4 */
+    /* Text hierarchy */
+    --text-primary: 0 0% 9%;
+    --text-secondary: 0 0% 45%;
+    --text-tertiary: 0 0% 65%;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(211 100% 60%));
-    --gradient-surface: linear-gradient(180deg, hsl(var(--background)), hsl(var(--surface-sunken)));
+    /* Quadrant colors - Subtle and accessible */
+    --q1-color: 142 71% 45%; /* Muted green */
+    --q2-color: 221 83% 53%; /* Subtle blue */
+    --q3-color: 32 95% 44%; /* Warm orange */
+    --q4-color: 262 83% 58%; /* Purple */
+    
+    /* Quadrant backgrounds - Very subtle */
+    --q1-bg: 142 40% 96%;
+    --q2-bg: 221 40% 96%;
+    --q3-bg: 32 40% 96%;
+    --q4-bg: 262 40% 96%;
+    
+    /* Status colors */
+    --success: 142 71% 45%;
+    --success-bg: 142 40% 96%;
+    --warning: 32 95% 44%;
+    --warning-bg: 32 40% 96%;
+    --info: 221 83% 53%;
+    --info-bg: 221 40% 96%;
 
     --sidebar-background: 0 0% 98%;
 

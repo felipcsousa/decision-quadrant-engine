@@ -100,64 +100,107 @@ export function getBasePatterns(quadrant: Quadrant): Pattern[] {
   return patterns[quadrant];
 }
 
-export function refineByLayers(basePatterns: Pattern[], layers: DecisionLayers): Pattern[] {
+export function refineByLayers(basePatterns: Pattern[], layers: DecisionLayers): { patterns: Pattern[]; warnings: string[] } {
   const refinements: Pattern[] = [];
+  const warnings: string[] = [];
   
+  // Detect consistency issues
+  if (layers.risk === 'alto' && layers.urgency === 'alta') {
+    warnings.push('Alto risco + alta urgência: considere simplificar ou adicionar validações extras');
+  }
+  
+  if (layers.uncertainty === 'alta' && layers.urgency === 'alta') {
+    warnings.push('Alta incerteza + alta urgência: pode gerar decisões precipitadas');
+  }
+  
+  // Risk refinements (priority: high)
   if (layers.risk === 'alto') {
     refinements.push(
-      { name: 'Confirmação Explícita', description: 'Confirmação obrigatória para ações críticas', category: 'refinement' },
-      { name: 'Autenticação Reforçada', description: 'Biometria ou senha adicional', category: 'refinement' },
-      { name: 'Destaque de Consequências', description: 'Impactos claramente visíveis', category: 'refinement' }
+      { name: 'Confirmação Explícita', description: 'Confirmação obrigatória para ações críticas', category: 'refinement', priority: 'high' },
+      { name: 'Autenticação Reforçada', description: 'Biometria ou senha adicional', category: 'refinement', priority: 'high' },
+      { name: 'Destaque de Consequências', description: 'Impactos claramente visíveis', category: 'refinement', priority: 'medium' }
     );
   }
   
+  // Uncertainty refinements (priority: medium)
   if (layers.uncertainty === 'alta') {
     refinements.push(
-      { name: 'Ajuda Contextual', description: 'Suporte integrado ao fluxo', category: 'refinement' },
-      { name: 'Histórico/Antes-Depois', description: 'Referências de contexto', category: 'refinement' },
-      { name: 'Mini-Simulação', description: 'Preview determinístico', category: 'refinement' }
+      { name: 'Ajuda Contextual', description: 'Suporte integrado ao fluxo', category: 'refinement', priority: 'high' },
+      { name: 'Histórico/Antes-Depois', description: 'Referências de contexto', category: 'refinement', priority: 'medium' },
+      { name: 'Mini-Simulação', description: 'Preview determinístico', category: 'refinement', priority: 'low' }
     );
   }
   
+  // Urgency refinements (priority: high for access, medium for feedback)
   if (layers.urgency === 'alta') {
     refinements.push(
-      { name: 'Encontrabilidade ≤2s', description: 'Acesso imediato', category: 'refinement' },
-      { name: 'Atalhos/CTA Primário', description: 'Ações principais sempre visíveis', category: 'refinement' },
-      { name: 'Feedback Quase Imediato', description: 'Resposta em <300ms', category: 'refinement' }
+      { name: 'Encontrabilidade ≤2s', description: 'Acesso imediato', category: 'refinement', priority: 'high' },
+      { name: 'Atalhos/CTA Primário', description: 'Ações principais sempre visíveis', category: 'refinement', priority: 'high' },
+      { name: 'Feedback Quase Imediato', description: 'Resposta em <300ms', category: 'refinement', priority: 'medium' }
     );
   }
   
-  return [...basePatterns, ...refinements];
+  // Sort patterns by priority
+  const allPatterns = [...basePatterns.map(p => ({ ...p, priority: 'essential' as const })), ...refinements];
+  const sortedPatterns = allPatterns.sort((a, b) => {
+    const priorityOrder = { essential: 0, high: 1, medium: 2, low: 3 };
+    return priorityOrder[a.priority] - priorityOrder[b.priority];
+  });
+  
+  return { patterns: sortedPatterns, warnings };
 }
 
 export function getGuardrails(quadrant: Quadrant, layers: DecisionLayers): Guardrail[] {
   const base = {
     Q1: [
-      { metric: 'Toques para ação principal', target: '≤2 toques', description: 'Eficiência de acesso' },
-      { metric: 'Tempo para conclusão', target: '≤5s', description: 'Meta de velocidade' }
+      { metric: 'Toques para ação principal', target: '≤2 toques', description: 'Eficiência de acesso', range: '1-2 toques' },
+      { metric: 'Tempo para conclusão', target: '≤5s', description: 'Meta de velocidade', range: '3-5s' },
+      { metric: 'Taxa de sucesso', target: '≥95%', description: 'Eficácia da interface', range: '95-100%' }
     ],
     Q2: [
-      { metric: 'Resposta de filtros', target: '~300ms', description: 'Filtros reativos' },
-      { metric: 'Densidade de informação', target: 'Escaneável', description: 'Legibilidade mantida' }
+      { metric: 'Resposta de filtros', target: '300ms ± 100ms', description: 'Filtros reativos', range: '200-400ms' },
+      { metric: 'Densidade de informação', target: '7±2 elementos por grupo', description: 'Legibilidade mantida', range: '5-9 elementos' },
+      { metric: 'Tempo de scan', target: '≤15s para overview', description: 'Compreensão rápida', range: '10-15s' }
     ],
     Q3: [
-      { metric: 'Decisões por tela', target: '1 decisão', description: 'Simplicidade cognitiva' },
-      { metric: 'Clareza de sucesso', target: 'Explícita', description: 'Feedback inequívoco' }
+      { metric: 'Decisões por tela', target: '1 decisão', description: 'Simplicidade cognitiva', range: '1 decisão' },
+      { metric: 'Clareza de sucesso', target: '100% dos usuários entendem', description: 'Feedback inequívoco', range: '95-100%' },
+      { metric: 'Taxa de abandono', target: '≤15%', description: 'Fluxo bem guiado', range: '5-15%' }
     ],
     Q4: [
-      { metric: 'Prevenção de perda', target: 'Zero perda', description: 'Progresso sempre salvo' },
-      { metric: 'Consistência de inputs', target: 'Validação real-time', description: 'Detecção precoce de erros' }
+      { metric: 'Prevenção de perda', target: 'Zero perda de dados', description: 'Progresso sempre salvo', range: '0% perda' },
+      { metric: 'Validação real-time', target: '≤2s após input', description: 'Detecção precoce de erros', range: '1-2s' },
+      { metric: 'Tempo de preenchimento', target: '≤20min', description: 'Processo não exaustivo', range: '15-20min' }
     ]
   };
   
   const additional: Guardrail[] = [];
   
   if (layers.risk === 'alto') {
-    additional.push({ metric: 'Taxa de confirmação', target: '100%', description: 'Todas ações críticas confirmadas' });
+    additional.push({ 
+      metric: 'Taxa de confirmação', 
+      target: '100%', 
+      description: 'Todas ações críticas confirmadas',
+      range: '100%'
+    });
   }
   
   if (layers.urgency === 'alta') {
-    additional.push({ metric: 'Tempo de carregamento', target: '<1s', description: 'Resposta imediata crítica' });
+    additional.push({ 
+      metric: 'Tempo de carregamento', 
+      target: '<1s', 
+      description: 'Resposta imediata crítica',
+      range: '200-1000ms'
+    });
+  }
+  
+  if (layers.uncertainty === 'alta') {
+    additional.push({ 
+      metric: 'Disponibilidade de ajuda', 
+      target: '≤2 cliques', 
+      description: 'Suporte sempre acessível',
+      range: '1-2 cliques'
+    });
   }
   
   return [...base[quadrant], ...additional];

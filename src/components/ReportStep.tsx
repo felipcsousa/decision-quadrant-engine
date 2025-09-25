@@ -42,7 +42,7 @@ export function ReportStep() {
 
   const quadrantInfo = getQuadrantInfo(state.quadrant);
   const basePatterns = getBasePatterns(state.quadrant);
-  const refinedPatterns = refineByLayers(basePatterns, state.layers);
+  const refinementResult = refineByLayers(basePatterns, state.layers);
   const guardrails = getGuardrails(state.quadrant, state.layers);
   const checklist = generateChecklist();
 
@@ -55,8 +55,9 @@ export function ReportStep() {
     navigator.clipboard.writeText(window.location.href);
   };
 
-  const basePatternList = refinedPatterns.filter(p => p.category === 'base');
-  const refinementList = refinedPatterns.filter(p => p.category === 'refinement');
+  const basePatternList = refinementResult.patterns.filter(p => p.category === 'base');
+  const refinementList = refinementResult.patterns.filter(p => p.category === 'refinement');
+  const warnings = refinementResult.warnings;
 
   return (
     <div className="min-h-screen bg-gradient-surface">
@@ -155,6 +156,28 @@ export function ReportStep() {
               </CardContent>
             </Card>
 
+            {/* Warnings */}
+            {warnings.length > 0 && (
+              <Card className="border-warning bg-warning-bg">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <AlertTriangle className="w-5 h-5 text-warning" />
+                    <CardTitle className="text-xl text-warning">Atenção</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {warnings.map((warning, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        <span className="text-warning">•</span>
+                        <p className="text-sm text-text-secondary">{warning}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Padrões */}
             <Card className="border-border/50 shadow-sm">
               <CardHeader>
@@ -171,11 +194,21 @@ export function ReportStep() {
 
                 <div>
                   <h4 className="font-semibold text-text-primary mb-3">Padrões Base ({state.quadrant})</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="space-y-3">
                     {basePatternList.map((pattern, index) => (
-                      <div key={index} className="p-3 bg-muted rounded-lg">
-                        <h5 className="font-medium text-text-primary">{pattern.name}</h5>
-                        <p className="text-sm text-text-secondary">{pattern.description}</p>
+                      <div key={index} className="flex items-start gap-3 p-4 bg-surface-hover rounded-lg border border-border">
+                        <div className={`w-2 h-2 rounded-full mt-2 ${pattern.priority === 'essential' ? 'bg-success' : 'bg-primary'}`} />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h5 className="font-medium text-text-primary">{pattern.name}</h5>
+                            <span className={`text-xs px-2 py-1 rounded-full ${
+                              pattern.priority === 'essential' ? 'bg-success-bg text-success' : 'bg-primary/10 text-primary'
+                            }`}>
+                              {pattern.priority === 'essential' ? 'Essencial' : 'Base'}
+                            </span>
+                          </div>
+                          <p className="text-sm text-text-secondary">{pattern.description}</p>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -184,11 +217,25 @@ export function ReportStep() {
                 {refinementList.length > 0 && (
                   <div>
                     <h4 className="font-semibold text-text-primary mb-3">Refinamentos por Camadas</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-3">
                       {refinementList.map((pattern, index) => (
-                        <div key={index} className="p-3 bg-accent/10 border border-accent/20 rounded-lg">
-                          <h5 className="font-medium text-accent-foreground">{pattern.name}</h5>
-                          <p className="text-sm text-text-secondary">{pattern.description}</p>
+                        <div key={index} className="flex items-start gap-3 p-4 bg-accent/5 border border-accent/20 rounded-lg">
+                          <div className={`w-2 h-2 rounded-full mt-2 ${
+                            pattern.priority === 'high' ? 'bg-destructive' : 
+                            pattern.priority === 'medium' ? 'bg-warning' : 'bg-info'
+                          }`} />
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h5 className="font-medium text-text-primary">{pattern.name}</h5>
+                              <span className={`text-xs px-2 py-1 rounded-full ${
+                                pattern.priority === 'high' ? 'bg-destructive/10 text-destructive' :
+                                pattern.priority === 'medium' ? 'bg-warning-bg text-warning' : 'bg-info-bg text-info'
+                              }`}>
+                                {pattern.priority === 'high' ? 'Alta' : pattern.priority === 'medium' ? 'Média' : 'Baixa'}
+                              </span>
+                            </div>
+                            <p className="text-sm text-text-secondary">{pattern.description}</p>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -206,13 +253,18 @@ export function ReportStep() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
                   {guardrails.map((guardrail, index) => (
-                    <div key={index} className="p-4 bg-surface-elevated border border-border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
+                    <div key={index} className="border-l-4 border-primary pl-4 bg-surface-hover p-4 rounded-r-lg">
+                      <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium text-text-primary">{guardrail.metric}</h4>
-                        <Badge variant="secondary">{guardrail.target}</Badge>
+                        <Badge variant="secondary" className="shrink-0 ml-2">{guardrail.target}</Badge>
                       </div>
+                      {guardrail.range && (
+                        <div className="text-xs text-text-tertiary mb-1">
+                          Faixa aceitável: {guardrail.range}
+                        </div>
+                      )}
                       <p className="text-sm text-text-secondary">{guardrail.description}</p>
                     </div>
                   ))}

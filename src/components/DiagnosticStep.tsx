@@ -210,10 +210,10 @@ export function DiagnosticStep() {
                     </svg>
 
                     {/* Quadrant labels */}
-                    <div className="absolute top-2 left-2 text-xs font-medium text-q2 bg-white/80 px-2 py-1 rounded">Q2</div>
-                    <div className="absolute top-2 right-2 text-xs font-medium text-q1 bg-white/80 px-2 py-1 rounded">Q1</div>
-                    <div className="absolute bottom-2 left-2 text-xs font-medium text-q3 bg-white/80 px-2 py-1 rounded">Q3</div>
-                    <div className="absolute bottom-2 right-2 text-xs font-medium text-q4 bg-white/80 px-2 py-1 rounded">Q4</div>
+                    <div className="absolute top-2 left-2 text-xs font-medium text-q2 bg-q2-bg px-2 py-1 rounded border border-q2/20">Q2</div>
+                    <div className="absolute top-2 right-2 text-xs font-medium text-q1 bg-q1-bg px-2 py-1 rounded border border-q1/20">Q1</div>
+                    <div className="absolute bottom-2 left-2 text-xs font-medium text-q3 bg-q3-bg px-2 py-1 rounded border border-q3/20">Q3</div>
+                    <div className="absolute bottom-2 right-2 text-xs font-medium text-q4 bg-q4-bg px-2 py-1 rounded border border-q4/20">Q4</div>
 
                     {/* Position marker */}
                     <div
