@@ -11,6 +11,7 @@ import {
   getGuardrails, 
   generateChecklist 
 } from '@/lib/ux-logic';
+import { generateAISuggestions } from '@/lib/ai-suggestions';
 import { 
   ArrowLeft, 
   Download, 
@@ -21,7 +22,9 @@ import {
   FileText,
   Target,
   Lightbulb,
-  Shield
+  Shield,
+  Sparkles,
+  Brain
 } from 'lucide-react';
 
 export function ReportStep() {
@@ -45,6 +48,7 @@ export function ReportStep() {
   const refinementResult = refineByLayers(basePatterns, state.layers);
   const guardrails = getGuardrails(state.quadrant, state.layers);
   const checklist = generateChecklist();
+  const aiSuggestions = generateAISuggestions(state.quadrant, state.layers, state.definition);
 
   const handlePrint = () => {
     window.print();
@@ -86,6 +90,52 @@ export function ReportStep() {
           </div>
 
           <div className="space-y-8" id="report-content">
+            {/* AI Curated Suggestions */}
+            <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5 shadow-sm">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-full">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl text-text-primary flex items-center gap-2">
+                      Sugestões Personalizadas por IA
+                      <Brain className="w-4 h-4 text-primary" />
+                    </CardTitle>
+                    <p className="text-sm text-text-secondary mt-1">
+                      Recomendações específicas baseadas no contexto da sua tarefa
+                    </p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {aiSuggestions.map((suggestion, index) => (
+                    <div 
+                      key={index} 
+                      className="p-4 bg-background/80 backdrop-blur-sm border border-border/50 rounded-lg hover:shadow-md transition-all"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="font-semibold text-text-primary text-sm">{suggestion.title}</h4>
+                        <Badge 
+                          variant={suggestion.priority === 'essential' ? 'default' : 'secondary'}
+                          className="text-xs shrink-0 ml-2"
+                        >
+                          {suggestion.priority === 'essential' ? 'Essencial' : 
+                           suggestion.priority === 'high' ? 'Alta' : 
+                           suggestion.priority === 'medium' ? 'Média' : 'Baixa'}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-text-secondary mb-2">{suggestion.description}</p>
+                      <div className="text-xs text-text-tertiary p-2 bg-muted/50 rounded">
+                        <strong>Por quê:</strong> {suggestion.rationale}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Metadados */}
             <Card className="border-border/50 shadow-sm">
               <CardHeader>

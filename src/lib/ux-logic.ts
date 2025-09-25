@@ -71,29 +71,29 @@ export function getQuadrantInfo(quadrant: Quadrant) {
 export function getBasePatterns(quadrant: Quadrant): Pattern[] {
   const patterns = {
     Q1: [
-      { name: 'Quick Actions', description: 'Ações rápidas e diretas', category: 'base' as const },
-      { name: 'Autofill', description: 'Preenchimento automático', category: 'base' as const },
-      { name: 'Optimistic UI', description: 'Interface otimista', category: 'base' as const },
-      { name: 'Feedback Imediato', description: 'Resposta instantânea', category: 'base' as const }
+      { name: 'Ações Rápidas', description: 'Botões principais sempre visíveis e acessíveis', category: 'base' as const },
+      { name: 'Preenchimento Inteligente', description: 'Lembrar últimos valores e sugerir automaticamente', category: 'base' as const },
+      { name: 'Resposta Imediata', description: 'Mostrar resultado antes da confirmação do servidor', category: 'base' as const },
+      { name: 'Memória Muscular', description: 'Manter posições e gestos consistentes entre versões', category: 'base' as const }
     ],
     Q2: [
-      { name: 'Overview → Detail', description: 'Visão geral para detalhe', category: 'base' as const },
-      { name: 'Filtros Facetados', description: 'Filtragem multi-dimensional', category: 'base' as const },
-      { name: 'Busca Avançada', description: 'Pesquisa sofisticada', category: 'base' as const },
-      { name: 'Seleção Múltipla', description: 'Operações em lote', category: 'base' as const },
-      { name: 'Vistas Salvas', description: 'Configurações personalizadas', category: 'base' as const }
+      { name: 'Visão Geral → Detalhes', description: 'Começar com resumo executivo, depois permitir drill-down', category: 'base' as const },
+      { name: 'Filtros por Categoria', description: 'Organizar filtros em grupos com contadores', category: 'base' as const },
+      { name: 'Busca Inteligente', description: 'Sugestões automáticas e busca por múltiplos campos', category: 'base' as const },
+      { name: 'Ações em Lote', description: 'Selecionar múltiplos itens para operações simultâneas', category: 'base' as const },
+      { name: 'Configurações Salvas', description: 'Permitir salvar combinações de filtros favoritas', category: 'base' as const }
     ],
     Q3: [
-      { name: 'Fluxo Passo-a-Passo', description: 'Orientação sequencial', category: 'base' as const },
-      { name: 'Helper Text', description: 'Textos de ajuda contextual', category: 'base' as const },
-      { name: 'Review/Undo', description: 'Revisão e desfazer', category: 'base' as const }
+      { name: 'Assistente Simples', description: 'Uma decisão por tela com progresso claro', category: 'base' as const },
+      { name: 'Ajuda Contextual', description: 'Dicas e exemplos próximos aos campos', category: 'base' as const },
+      { name: 'Revisar e Voltar', description: 'Sempre permitir corrigir antes de finalizar', category: 'base' as const }
     ],
     Q4: [
-      { name: 'Wizard/Stepper', description: 'Assistente passo a passo', category: 'base' as const },
-      { name: 'Autosave', description: 'Salvamento automático', category: 'base' as const },
-      { name: 'Validação Precoce', description: 'Validação durante preenchimento', category: 'base' as const },
-      { name: 'Resumo Fixo', description: 'Sumário sempre visível', category: 'base' as const },
-      { name: 'Breadcrumbs/Deep Link', description: 'Navegação e links profundos', category: 'base' as const }
+      { name: 'Assistente Completo', description: 'Múltiplos passos com navegação livre entre eles', category: 'base' as const },
+      { name: 'Salvamento Automático', description: 'Nunca perder progresso por problemas técnicos', category: 'base' as const },
+      { name: 'Validação Imediata', description: 'Avisar sobre problemas assim que o campo é preenchido', category: 'base' as const },
+      { name: 'Resumo Lateral', description: 'Painel fixo mostrando escolhas atuais', category: 'base' as const },
+      { name: 'Navegação Flexível', description: 'Links diretos para retomar em qualquer ponto', category: 'base' as const }
     ]
   };
   
@@ -116,27 +116,27 @@ export function refineByLayers(basePatterns: Pattern[], layers: DecisionLayers):
   // Risk refinements (priority: high)
   if (layers.risk === 'alto') {
     refinements.push(
-      { name: 'Confirmação Explícita', description: 'Confirmação obrigatória para ações críticas', category: 'refinement', priority: 'high' },
-      { name: 'Autenticação Reforçada', description: 'Biometria ou senha adicional', category: 'refinement', priority: 'high' },
-      { name: 'Destaque de Consequências', description: 'Impactos claramente visíveis', category: 'refinement', priority: 'medium' }
+      { name: 'Dupla Confirmação', description: 'Pedir confirmação adicional com senha ou biometria', category: 'refinement', priority: 'high' },
+      { name: 'Delay de Reflexão', description: 'Aguardar 3 segundos antes de habilitar ação crítica', category: 'refinement', priority: 'high' },
+      { name: 'Consequências Visíveis', description: 'Mostrar claramente o que acontecerá após a ação', category: 'refinement', priority: 'medium' }
     );
   }
   
   // Uncertainty refinements (priority: medium)
   if (layers.uncertainty === 'alta') {
     refinements.push(
-      { name: 'Ajuda Contextual', description: 'Suporte integrado ao fluxo', category: 'refinement', priority: 'high' },
-      { name: 'Histórico/Antes-Depois', description: 'Referências de contexto', category: 'refinement', priority: 'medium' },
-      { name: 'Mini-Simulação', description: 'Preview determinístico', category: 'refinement', priority: 'low' }
+      { name: 'Tutorial Interativo', description: 'Guia prático na primeira utilização', category: 'refinement', priority: 'high' },
+      { name: 'Exemplos Reais', description: 'Mostrar casos similares ou histórico de decisões', category: 'refinement', priority: 'medium' },
+      { name: 'Simulação em Tempo Real', description: 'Calcular impacto das escolhas conforme o usuário preenche', category: 'refinement', priority: 'low' }
     );
   }
   
   // Urgency refinements (priority: high for access, medium for feedback)
   if (layers.urgency === 'alta') {
     refinements.push(
-      { name: 'Encontrabilidade ≤2s', description: 'Acesso imediato', category: 'refinement', priority: 'high' },
-      { name: 'Atalhos/CTA Primário', description: 'Ações principais sempre visíveis', category: 'refinement', priority: 'high' },
-      { name: 'Feedback Quase Imediato', description: 'Resposta em <300ms', category: 'refinement', priority: 'medium' }
+      { name: 'Acesso em 2 Segundos', description: 'Função principal acessível em menos de 2 segundos', category: 'refinement', priority: 'high' },
+      { name: 'Atalhos de Teclado', description: 'Permitir completar ação com teclas (Ctrl+Enter)', category: 'refinement', priority: 'high' },
+      { name: 'Resposta Instantânea', description: 'Feedback visual em menos de 300ms', category: 'refinement', priority: 'medium' }
     );
   }
   
