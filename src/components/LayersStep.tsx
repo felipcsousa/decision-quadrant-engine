@@ -215,7 +215,7 @@ export function LayersStep() {
             
             <Button
               onClick={nextStep}
-              className="flex items-center gap-2 bg-gradient-primary text-white"
+              className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary-hover"
             >
               Gerar Relatório
               <ArrowRight className="w-4 h-4" />

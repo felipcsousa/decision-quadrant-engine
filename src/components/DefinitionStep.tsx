@@ -100,7 +100,7 @@ export function DefinitionStep() {
                   <Button
                     type="submit"
                     disabled={!isFormValid}
-                    className="flex items-center gap-2 bg-gradient-primary text-white"
+                    className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary-hover"
                   >
                     Ir para Diagnóstico
                     <ArrowRight className="w-4 h-4" />

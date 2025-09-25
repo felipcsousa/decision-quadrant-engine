@@ -27,7 +27,7 @@ export function LandingPage() {
             
             <h1 className="text-5xl font-bold text-text-primary mb-6 leading-tight">
               Análise UX baseada em
-              <span className="bg-gradient-primary bg-clip-text text-transparent block">
+              <span className="text-text-primary block">
                 Frequência × Informação
               </span>
             </h1>
@@ -43,7 +43,7 @@ export function LandingPage() {
             <Button 
               size="lg" 
               onClick={nextStep}
-              className="bg-gradient-primary hover:opacity-90 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+              className="bg-primary text-primary-foreground hover:bg-primary-hover px-8 py-6 text-lg font-semibold rounded-xl shadow-sm hover:shadow-md transition-all"
             >
               Nova Análise
               <ChevronRight className="w-5 h-5 ml-2" />
