@@ -1,13 +1,38 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { AnalysisProvider, useAnalysis } from '@/contexts/AnalysisContext';
+import { LandingPage } from '@/components/LandingPage';
+import { DefinitionStep } from '@/components/DefinitionStep';
+import { DiagnosticStep } from '@/components/DiagnosticStep';
+import { LayersStep } from '@/components/LayersStep';
+import { ReportStep } from '@/components/ReportStep';
+
+function AnalysisFlow() {
+  const { state } = useAnalysis();
+
+  const renderStep = () => {
+    switch (state.currentStep) {
+      case 0:
+        return <LandingPage />;
+      case 1:
+        return <DefinitionStep />;
+      case 2:
+        return <DiagnosticStep />;
+      case 3:
+        return <LayersStep />;
+      case 4:
+        return <ReportStep />;
+      default:
+        return <LandingPage />;
+    }
+  };
+
+  return renderStep();
+}
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <AnalysisProvider>
+      <AnalysisFlow />
+    </AnalysisProvider>
   );
 };
 

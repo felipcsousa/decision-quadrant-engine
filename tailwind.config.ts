@@ -22,10 +22,12 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          hover: "hsl(var(--secondary-hover))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -57,6 +59,21 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Custom tokens
+        "surface-elevated": "hsl(var(--surface-elevated))",
+        "surface-sunken": "hsl(var(--surface-sunken))",
+        "text-primary": "hsl(var(--text-primary))",
+        "text-secondary": "hsl(var(--text-secondary))",
+        "text-tertiary": "hsl(var(--text-tertiary))",
+        // Quadrant colors
+        "q1": "hsl(var(--q1-color))",
+        "q2": "hsl(var(--q2-color))",
+        "q3": "hsl(var(--q3-color))",
+        "q4": "hsl(var(--q4-color))",
+      },
+      backgroundImage: {
+        "gradient-primary": "var(--gradient-primary)",
+        "gradient-surface": "var(--gradient-surface)",
       },
       borderRadius: {
         lg: "var(--radius)",
