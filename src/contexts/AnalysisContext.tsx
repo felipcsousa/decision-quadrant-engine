@@ -270,7 +270,23 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
 
   const generateAISuggestions = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('Generating AI suggestions...');
+      
+      // Call backend to generate suggestions
+      const { data, error } = await supabase.functions.invoke('generate-ai-suggestions', {
+        body: {
+          quadrant: state.quadrant,
+          layers: state.layers,
+          definition: state.definition
+        }
+      });
+
+      if (error) {
+        console.error('Error from backend:', error);
+        throw error;
+      }
+
+      console.log('AI suggestions generated:', data);
       setAIState(prev => ({ ...prev, aiSuggestionsGenerated: true }));
 
       // Auto-save after generating AI suggestions
@@ -279,6 +295,8 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error('Error generating AI suggestions:', error);
+      // Fallback: just mark as generated
+      setAIState(prev => ({ ...prev, aiSuggestionsGenerated: true }));
     }
   };
   

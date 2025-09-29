@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useAnalysis } from '@/contexts/AnalysisContext';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   getQuadrantInfo, 
   getBasePatterns, 
@@ -45,13 +46,41 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import React from 'react';
 
 export function ReportStep() {
-  const { state, goToStep, reset, aiSuggestionsGenerated, generateAISuggestions } = useAnalysis();
+  const { state, goToStep, reset, aiSuggestionsGenerated, generateAISuggestions, saveAnalysis } = useAnalysis();
   const [isGeneratingAI, setIsGeneratingAI] = React.useState(false);
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [backendData, setBackendData] = React.useState<any>(null);
   const [sectionsOpen, setSectionsOpen] = React.useState<Record<string, boolean>>({
     patterns: true,
     guardrails: false,
     checklist: false
   });
+
+  // Try to fetch recommendations from backend
+  React.useEffect(() => {
+    if (state.quadrant) {
+      fetchRecommendations();
+    }
+  }, [state.quadrant, state.layers]);
+
+  const fetchRecommendations = async () => {
+    try {
+      console.log('Fetching recommendations from backend...');
+      const { data, error } = await supabase.functions.invoke('get-recommendations', {
+        body: {
+          quadrant: state.quadrant,
+          layers: state.layers
+        }
+      });
+
+      if (error) throw error;
+      console.log('Backend data loaded successfully');
+      setBackendData(data);
+    } catch (error) {
+      console.warn('Backend unavailable, using local data:', error);
+      // Will use local functions as fallback
+    }
+  };
 
   if (!state.quadrant) {
     return (
@@ -66,17 +95,24 @@ export function ReportStep() {
     );
   }
 
-  const quadrantInfo = getQuadrantInfo(state.quadrant);
-  const basePatterns = getBasePatterns(state.quadrant);
-  const detailedPatterns = getDetailedPatterns(state.quadrant);
-  const guardrails = getGuardrails(state.quadrant, state.layers);
-  const checklist = generateChecklist();
-  const transversalRecommendations = getTransversalRecommendations();
+  // Use backend data if available, otherwise use local functions
+  const quadrantInfo = backendData?.quadrantInfo || getQuadrantInfo(state.quadrant);
+  const basePatterns = backendData?.basePatterns || getBasePatterns(state.quadrant);
+  const detailedPatterns = backendData?.detailedSections || getDetailedPatterns(state.quadrant);
+  const guardrails = backendData?.guardrails || getGuardrails(state.quadrant, state.layers);
+  const checklist = backendData?.checklist || generateChecklist();
+  const transversalRecommendations = backendData?.transversalRecommendations || getTransversalRecommendations();
 
   const handleGenerateAI = async () => {
     setIsGeneratingAI(true);
     await generateAISuggestions();
     setIsGeneratingAI(false);
+  };
+
+  const handleSaveAnalysis = async () => {
+    setIsSaving(true);
+    await saveAnalysis(true);
+    setIsSaving(false);
   };
 
   const toggleSection = (section: string, open?: boolean) => {
@@ -495,7 +531,7 @@ export function ReportStep() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Button 
               onClick={() => goToStep(2)} 
               variant="outline" 
@@ -504,6 +540,25 @@ export function ReportStep() {
             >
               <ArrowLeft className="h-4 w-4" />
               Voltar para Camadas
+            </Button>
+            <Button 
+              onClick={handleSaveAnalysis}
+              disabled={isSaving}
+              variant="outline"
+              className="h-12 gap-3"
+              size="lg"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <FileText className="h-4 w-4" />
+                  Salvar Análise
+                </>
+              )}
             </Button>
             <Button 
               onClick={() => reset()} 
