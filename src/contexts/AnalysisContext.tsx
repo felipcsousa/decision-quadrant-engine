@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { AnalysisState, TaskDefinition, DiagnosticData, DecisionLayers } from '@/types/ux-analysis';
 import { classifyQuadrant } from '@/lib/ux-logic';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface AnalysisContextType {
   state: AnalysisState;
@@ -12,8 +14,11 @@ interface AnalysisContextType {
   goToStep: (step: number) => void;
   reset: () => void;
   loadPreset: (preset: { definition: Partial<TaskDefinition>; diagnostic: Partial<DiagnosticData>; layers: Partial<DecisionLayers> }) => void;
+  loadAnalysis: (id: string) => Promise<void>;
+  saveAnalysis: (completed?: boolean) => Promise<string | null>;
   aiSuggestionsGenerated: boolean;
   generateAISuggestions: () => Promise<void>;
+  currentAnalysisId: string | null;
 }
 
 const AnalysisContext = createContext<AnalysisContextType | undefined>(undefined);
@@ -49,7 +54,8 @@ const initialState: AnalysisState = {
 };
 
 const initialAIState = {
-  aiSuggestionsGenerated: false
+  aiSuggestionsGenerated: false,
+  currentAnalysisId: null as string | null
 };
 
 function analysisReducer(state: AnalysisState, action: AnalysisAction): AnalysisState {
@@ -135,6 +141,7 @@ function analysisReducer(state: AnalysisState, action: AnalysisAction): Analysis
 export function AnalysisProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(analysisReducer, initialState);
   const [aiState, setAIState] = React.useState(initialAIState);
+  const { toast } = useToast();
   
   const updateDefinition = (definition: Partial<TaskDefinition>) => {
     dispatch({ type: 'UPDATE_DEFINITION', payload: definition });
@@ -170,10 +177,109 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     setAIState(initialAIState);
   };
 
+  const saveAnalysis = async (completed = false): Promise<string | null> => {
+    try {
+      const { data, error } = await supabase.functions.invoke('save-analysis', {
+        body: {
+          id: aiState.currentAnalysisId,
+          definition: state.definition,
+          diagnostic: state.diagnostic,
+          layers: state.layers,
+          quadrant: state.quadrant,
+          aiSuggestionsGenerated: aiState.aiSuggestionsGenerated,
+          completed
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.id && !aiState.currentAnalysisId) {
+        setAIState(prev => ({ ...prev, currentAnalysisId: data.id }));
+      }
+
+      toast({
+        title: 'Análise salva',
+        description: 'Sua análise foi salva com sucesso',
+      });
+
+      return data.id;
+    } catch (error) {
+      console.error('Error saving analysis:', error);
+      toast({
+        title: 'Erro ao salvar',
+        description: 'Não foi possível salvar a análise',
+        variant: 'destructive',
+      });
+      return null;
+    }
+  };
+
+  const loadAnalysis = async (id: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('get-analysis-detail', {
+        body: { id }
+      });
+
+      if (error) throw error;
+
+      const analysis = data.analysis;
+      
+      dispatch({
+        type: 'LOAD_PRESET',
+        payload: {
+          definition: {
+            name: analysis.name,
+            description: analysis.description,
+            jtbd: analysis.jtbd
+          },
+          diagnostic: {
+            frequency: analysis.frequency,
+            information: analysis.information,
+            frequencyDir: analysis.frequencyDir,
+            informationDir: analysis.informationDir,
+            frequencyEvidence: analysis.frequencyEvidence,
+            informationEvidence: analysis.informationEvidence
+          },
+          layers: {
+            risk: analysis.risk,
+            uncertainty: analysis.uncertainty,
+            urgency: analysis.urgency,
+            collaboration: analysis.collaboration
+          }
+        }
+      });
+
+      setAIState({
+        aiSuggestionsGenerated: analysis.aiSuggestionsGenerated,
+        currentAnalysisId: id
+      });
+
+      toast({
+        title: 'Análise carregada',
+        description: 'Análise recuperada com sucesso',
+      });
+    } catch (error) {
+      console.error('Error loading analysis:', error);
+      toast({
+        title: 'Erro ao carregar',
+        description: 'Não foi possível carregar a análise',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const generateAISuggestions = async () => {
-    // Simulate AI generation delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setAIState({ aiSuggestionsGenerated: true });
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      setAIState(prev => ({ ...prev, aiSuggestionsGenerated: true }));
+
+      // Auto-save after generating AI suggestions
+      if (state.quadrant) {
+        await saveAnalysis(false);
+      }
+    } catch (error) {
+      console.error('Error generating AI suggestions:', error);
+    }
   };
   
   return (
@@ -188,8 +294,11 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
         goToStep,
         reset,
         loadPreset,
+        loadAnalysis,
+        saveAnalysis,
         aiSuggestionsGenerated: aiState.aiSuggestionsGenerated,
-        generateAISuggestions
+        generateAISuggestions,
+        currentAnalysisId: aiState.currentAnalysisId
       }}
     >
       {children}

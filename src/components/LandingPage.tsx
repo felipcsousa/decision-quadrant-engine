@@ -3,11 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useAnalysis } from '@/contexts/AnalysisContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { NUDGE_PRESETS } from '@/lib/ux-logic';
-import { ChevronRight, Zap, LogOut } from 'lucide-react';
+import { ChevronRight, Zap, LogOut, History } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export function LandingPage() {
   const { nextStep, loadPreset } = useAnalysis();
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleNudgeClick = (presetId: string) => {
     const preset = NUDGE_PRESETS.find(p => p.id === presetId);
@@ -23,6 +25,15 @@ export function LandingPage() {
         {user && (
           <div className="flex justify-end mb-8">
             <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/history')}
+                className="gap-2"
+              >
+                <History className="w-4 h-4" />
+                Minhas Análises
+              </Button>
               <span className="text-sm text-text-secondary">
                 {user.email}
               </span>
