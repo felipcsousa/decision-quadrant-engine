@@ -14,6 +14,217 @@ export type Database = {
   }
   public: {
     Tables: {
+      analysis_ai_suggestions: {
+        Row: {
+          analysis_id: string
+          category: string
+          created_at: string
+          description: string
+          display_order: number
+          id: string
+          priority: string
+          rationale: string
+          title: string
+        }
+        Insert: {
+          analysis_id: string
+          category: string
+          created_at?: string
+          description: string
+          display_order?: number
+          id?: string
+          priority: string
+          rationale: string
+          title: string
+        }
+        Update: {
+          analysis_id?: string
+          category?: string
+          created_at?: string
+          description?: string
+          display_order?: number
+          id?: string
+          priority?: string
+          rationale?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analysis_ai_suggestions_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "user_analyses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      checklist_items: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          item: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          category: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          item: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          item?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
+      guardrails: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string
+          display_order: number
+          id: string
+          metric_name: string
+          quadrant_id: string
+          range_value: string | null
+          target_value: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description: string
+          display_order?: number
+          id?: string
+          metric_name: string
+          quadrant_id: string
+          range_value?: string | null
+          target_value: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          display_order?: number
+          id?: string
+          metric_name?: string
+          quadrant_id?: string
+          range_value?: string | null
+          target_value?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guardrails_quadrant_id_fkey"
+            columns: ["quadrant_id"]
+            isOneToOne: false
+            referencedRelation: "quadrants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      layers_config: {
+        Row: {
+          copy_guidance: string
+          created_at: string
+          id: string
+          layer_type: string
+          level: string
+          measurement_guidance: string
+          updated_at: string
+          ux_guidance: string
+          validation_guidance: string
+          version: number
+        }
+        Insert: {
+          copy_guidance: string
+          created_at?: string
+          id?: string
+          layer_type: string
+          level: string
+          measurement_guidance: string
+          updated_at?: string
+          ux_guidance: string
+          validation_guidance: string
+          version?: number
+        }
+        Update: {
+          copy_guidance?: string
+          created_at?: string
+          id?: string
+          layer_type?: string
+          level?: string
+          measurement_guidance?: string
+          updated_at?: string
+          ux_guidance?: string
+          validation_guidance?: string
+          version?: number
+        }
+        Relationships: []
+      }
+      pattern_refinements: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          description: string
+          id: string
+          layer_type: string
+          level: string
+          name: string
+          priority: string | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          description: string
+          id?: string
+          layer_type: string
+          level: string
+          name: string
+          priority?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          layer_type?: string
+          level?: string
+          name?: string
+          priority?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -37,6 +248,309 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      quadrant_detailed_sections: {
+        Row: {
+          active: boolean
+          anti_patterns: Json
+          checklist_items: Json
+          created_at: string
+          display_order: number
+          id: string
+          items: Json
+          objective: string | null
+          quadrant_id: string
+          section_type: string
+          title: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          anti_patterns?: Json
+          checklist_items?: Json
+          created_at?: string
+          display_order?: number
+          id?: string
+          items?: Json
+          objective?: string | null
+          quadrant_id: string
+          section_type: string
+          title: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          anti_patterns?: Json
+          checklist_items?: Json
+          created_at?: string
+          display_order?: number
+          id?: string
+          items?: Json
+          objective?: string | null
+          quadrant_id?: string
+          section_type?: string
+          title?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quadrant_detailed_sections_quadrant_id_fkey"
+            columns: ["quadrant_id"]
+            isOneToOne: false
+            referencedRelation: "quadrants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quadrant_patterns: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          description: string
+          display_order: number
+          id: string
+          name: string
+          priority: string | null
+          quadrant_id: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          description: string
+          display_order?: number
+          id?: string
+          name: string
+          priority?: string | null
+          quadrant_id: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          description?: string
+          display_order?: number
+          id?: string
+          name?: string
+          priority?: string | null
+          quadrant_id?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quadrant_patterns_quadrant_id_fkey"
+            columns: ["quadrant_id"]
+            isOneToOne: false
+            referencedRelation: "quadrants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quadrants: {
+        Row: {
+          archetype: string
+          code: string
+          created_at: string
+          description: string
+          guideline: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          archetype: string
+          code: string
+          created_at?: string
+          description: string
+          guideline: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          archetype?: string
+          code?: string
+          created_at?: string
+          description?: string
+          guideline?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      suggestion_templates: {
+        Row: {
+          active: boolean
+          applies_to_risk: string | null
+          applies_to_uncertainty: string | null
+          applies_to_urgency: string | null
+          category: string
+          created_at: string
+          description: string
+          id: string
+          priority: string
+          quadrant_id: string | null
+          rationale: string
+          title: string
+          trigger_context: string
+          trigger_value: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          applies_to_risk?: string | null
+          applies_to_uncertainty?: string | null
+          applies_to_urgency?: string | null
+          category: string
+          created_at?: string
+          description: string
+          id?: string
+          priority: string
+          quadrant_id?: string | null
+          rationale: string
+          title: string
+          trigger_context: string
+          trigger_value: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          applies_to_risk?: string | null
+          applies_to_uncertainty?: string | null
+          applies_to_urgency?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          priority?: string
+          quadrant_id?: string | null
+          rationale?: string
+          title?: string
+          trigger_context?: string
+          trigger_value?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suggestion_templates_quadrant_id_fkey"
+            columns: ["quadrant_id"]
+            isOneToOne: false
+            referencedRelation: "quadrants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transversal_recommendations: {
+        Row: {
+          active: boolean
+          created_at: string
+          display_order: number
+          id: string
+          recommendation: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          display_order?: number
+          id?: string
+          recommendation: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          display_order?: number
+          id?: string
+          recommendation?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
+      user_analyses: {
+        Row: {
+          ai_suggestions_generated: boolean
+          collaboration_level: string | null
+          completed_at: string | null
+          created_at: string
+          description: string
+          frequency: number
+          frequency_direction: string | null
+          frequency_evidence: string | null
+          id: string
+          information: number
+          information_direction: string | null
+          information_evidence: string | null
+          jtbd: string
+          name: string
+          quadrant_code: string | null
+          risk_level: string
+          uncertainty_level: string
+          updated_at: string
+          urgency_level: string
+          user_id: string
+        }
+        Insert: {
+          ai_suggestions_generated?: boolean
+          collaboration_level?: string | null
+          completed_at?: string | null
+          created_at?: string
+          description: string
+          frequency: number
+          frequency_direction?: string | null
+          frequency_evidence?: string | null
+          id?: string
+          information: number
+          information_direction?: string | null
+          information_evidence?: string | null
+          jtbd: string
+          name: string
+          quadrant_code?: string | null
+          risk_level: string
+          uncertainty_level: string
+          updated_at?: string
+          urgency_level: string
+          user_id: string
+        }
+        Update: {
+          ai_suggestions_generated?: boolean
+          collaboration_level?: string | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string
+          frequency?: number
+          frequency_direction?: string | null
+          frequency_evidence?: string | null
+          id?: string
+          information?: number
+          information_direction?: string | null
+          information_evidence?: string | null
+          jtbd?: string
+          name?: string
+          quadrant_code?: string | null
+          risk_level?: string
+          uncertainty_level?: string
+          updated_at?: string
+          urgency_level?: string
           user_id?: string
         }
         Relationships: []
