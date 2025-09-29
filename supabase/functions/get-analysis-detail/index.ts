@@ -28,8 +28,7 @@ Deno.serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const url = new URL(req.url);
-    const analysisId = url.pathname.split('/').pop();
+    const { id: analysisId } = await req.json();
 
     if (!analysisId) {
       throw new Error('Missing analysis ID');

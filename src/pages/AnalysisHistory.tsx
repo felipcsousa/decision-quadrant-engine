@@ -109,18 +109,31 @@ export default function AnalysisHistory() {
           </div>
 
           {analyses.length === 0 ? (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <FileText className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-text-primary mb-2">
-                  Nenhuma análise encontrada
+            <Card className="border-border/50 bg-card/50 backdrop-blur">
+              <CardContent className="py-16 text-center">
+                <div className="relative mx-auto mb-6 w-24 h-24">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full blur-xl"></div>
+                  <div className="relative bg-background rounded-full p-5 shadow-lg">
+                    <FileText className="h-14 w-14 text-primary" />
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-text-primary mb-3">
+                  Comece sua jornada UX
                 </h3>
-                <p className="text-text-secondary mb-6">
-                  Comece criando sua primeira análise UX
+                <p className="text-text-secondary text-base max-w-md mx-auto mb-2">
+                  Crie análises baseadas nos quadrantes de UX Mobile e obtenha recomendações personalizadas para cada contexto de uso.
                 </p>
-                <Button onClick={() => navigate('/')}>
-                  Nova Análise
-                </Button>
+                <p className="text-text-tertiary text-sm max-w-sm mx-auto mb-8">
+                  Identifique padrões, defina camadas de decisão e receba insights detalhados para melhorar suas interfaces.
+                </p>
+                
+                <div className="flex gap-3 justify-center">
+                  <Button onClick={() => navigate('/')} size="lg" className="gap-2">
+                    <FileText className="h-4 w-4" />
+                    Nova Análise
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ) : (
