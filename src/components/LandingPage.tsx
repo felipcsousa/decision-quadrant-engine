@@ -1,11 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAnalysis } from '@/contexts/AnalysisContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { NUDGE_PRESETS } from '@/lib/ux-logic';
-import { ChevronRight, Zap } from 'lucide-react';
+import { ChevronRight, Zap, LogOut } from 'lucide-react';
 
 export function LandingPage() {
   const { nextStep, loadPreset } = useAnalysis();
+  const { user, signOut } = useAuth();
 
   const handleNudgeClick = (presetId: string) => {
     const preset = NUDGE_PRESETS.find(p => p.id === presetId);
@@ -17,6 +19,26 @@ export function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-surface">
       <div className="container mx-auto px-4 py-16">
+        {/* User menu */}
+        {user && (
+          <div className="flex justify-end mb-8">
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-text-secondary">
+                {user.email}
+              </span>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={signOut}
+                className="gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                Sair
+              </Button>
+            </div>
+          </div>
+        )}
+
         <div className="max-w-4xl mx-auto text-center">
           {/* Header */}
           <div className="mb-16">
