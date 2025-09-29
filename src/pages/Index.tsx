@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AnalysisProvider, useAnalysis } from '@/contexts/AnalysisContext';
+import { useAnalysis } from '@/contexts/AnalysisContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { LandingPage } from '@/components/LandingPage';
 import { DefinitionStep } from '@/components/DefinitionStep';
@@ -54,9 +54,7 @@ const Index = () => {
   }
 
   return (
-    <AnalysisProvider>
-      <AnalysisFlow />
-    </AnalysisProvider>
+    <AnalysisFlow />
   );
 };
 
